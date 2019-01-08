@@ -1,2 +1,2 @@
-# lotusgarden
+# Lotus Garden
 Distributed Systems Project
