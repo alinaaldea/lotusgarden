@@ -1,0 +1,89 @@
+.times{
+	text-align: center;
+	font-size: 1.5em;
+	display: block;
+    margin: auto;
+}
+.parking{
+	text-align: center;
+	font-size: 1.5em;
+	display: block;
+    margin: auto;
+}
+.reserve{
+	text-align: center;
+	font-size: 1.5em;
+	display: block;
+    margin: auto;
+}
+
+.reservation{
+	width: 100%;
+	height:auto;
+	background-color: #F85131;
+	border-radius: 25px;
+	color: black;
+	padding: 20px; 
+}
+
+input[type=text],input[type=number],input[type=date],input[type=email], input[type=time], input[type=tel], select {
+    padding: 12px 12px;
+    margin: 0 0 20px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+input[type=text]:focus,input[type=number]:focus,input[type=date]:focus,input[type=email]:focus, input[type=time]:focus, input[type=tel]:focus {
+    background-color: lightgrey;/*ffad9e*/
+}
+input[type=button], input[type=submit], input[type=reset] {
+    background-color: grey;
+    border: none;
+    color: white;
+    padding: 16px 32px;
+    text-decoration: none;
+    margin: 4px 2px;
+    cursor: pointer;
+	border-radius: 5px;
+}
+
+.gallery{
+	margin-top: 2rem;
+	margin-left: 0.25rem;
+}
+
+.image-div{
+	background-color: #DEDEDE;
+	display: grid;
+	grid-template-columns: repeat(1, 1fr);
+	grid-gap: 20px;
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+	box-sizing: border-box;         /* Opera/IE 8+ */
+	height: auto;
+	width:100%;
+	/*box-shadow: 10px 10px 5px #2f2f2f;*/
+	margin-bottom: 2rem;
+	margin-right: 1rem;
+}
+
+.image-div > img{
+	width: 100%;
+}
+
+.menuImage > img{
+	width: 100%;
+
+}
+
+.mainImage > img{
+	width: 100%;
+}
+
+/*body{
+	background-image: url('../images/philo/philo1.jpg');
+	background-repeat: no-repeat;
+	background-size: 100% auto;
+	background-attachment: fixed;
+}*/
