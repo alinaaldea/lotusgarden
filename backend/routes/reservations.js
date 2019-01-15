@@ -38,178 +38,129 @@ router.post("/add", function(req, res, next) {
 });
 
 /*GET THE TABLES FOR A TIMESLOT*/
-router.get("/tables/", function(req, res, next) {
+router.get("/tables", function(req, res, next) {
   var body_date = new Date(req.body.dt);
-  var body_table_id = req.body.table_id;
   var dt = new Date(
     body_date.getFullYear(),
     body_date.getMonth(),
     body_date.getDate(),
-    body_date.getHours() - 1,
+    body_date.getHours(),
     body_date.getMinutes()
   );
-  console.log(dt + "\n" + body_table_id);
+  var start_of_day = new Date(
+    body_date.getFullYear(),
+    body_date.getMonth(),
+    body_date.getDate(),
+    13, //hour 12
+    0
+  );
+  var end_of_day = new Date(
+    body_date.getFullYear(),
+    body_date.getMonth(),
+    body_date.getDate(),
+    24, //hour 23
+    0
+  );
+
   var tables = [];
 
-  var currentTable = null;
-
+  console.log(dt);
+  console.log(start_of_day);
+  console.log(end_of_day);
   //in case the datetime is during a reservation
-  Reservation.findOne(
+  Reservation.find(
     {
-      table_id: body_table_id,
-      start_dateTime: { $lt: dt },
-      end_dateTime: { $gt: dt }
+      $or: [
+        {
+          $and: [
+            //this means that our datetime is overlapping a reservation
+            { start_dateTime: { $lt: dt, $gte: start_of_day } },
+            { end_dateTime: { $gt: dt, $lt: end_of_day } }
+          ]
+        },
+        {
+          //return the next reservation after our datetime
+          $and: [{ end_dateTime: { $gt: dt, $lt: end_of_day } }]
+        }
+      ]
     },
-    function(err, res) {
+    function(err, reservations) {
       if (err) console.log(err);
-      if (res) {
-        return res;
+      if (reservations) {
+        console.log(reservations);
+        return reservations;
       }
     }
-  ).then(function(overlapping_reservation) {
-    //the next reservation after the datetime
-    Reservation.findOne(
-      {
-        table_id: body_table_id,
-        start_dateTime: { $gt: dt }
-      },
-      function(err, res) {
-        if (err) console.log(err);
-        if (res) {
-          return res;
-        }
-      }
-    ).then(function(next_reservation) {
-      console.log("\n Overlapping reservation: \n" + overlapping_reservation);
-      console.log("\n Next reservation: \n" + next_reservation);
-
-      if (overlapping_reservation) {
-        if (
-          dt > overlapping_reservation.start_dateTime &&
-          dt < overlapping_reservation.end_dateTime
-        ) {
-          //the searched datetime is during a reservation
-          if (
-            next_reservation.start_dateTime -
-              overlapping_reservation.end_dateTime <
-            3600000
-          ) {
-            //3,600,000 ms = 1 h
-            currentTable = {
-              info: "Table unavailable (less then one hour).",
-              value: 0
-            };
-            console.log(currentTable);
-            tables.push(currentTable);
-          } else if (
-            next_reservation.start_dateTime -
-              overlapping_reservation.end_dateTime >
-              3600000 &&
-            next_reservation.start_dateTime -
-              overlapping_reservation.end_dateTime <
-              7200000
-          ) {
-            var minutes_available = Math.floor(
-              (next_reservation.start_dateTime -
-                overlapping_reservation.end_dateTime) /
-                60000
-            );
-
-            var message1 =
-              "Table available for " +
-              minutes_available +
-              " minutes, between " +
-              overlapping_reservation.end_dateTime +
-              " and " +
-              next_reservation.start_dateTime;
-
-            currentTable = {
-              info: message1,
-              value: minutes_available
-            };
-            console.log(currentTable);
-            tables.push(currentTable);
-          } else {
-            currentTable = {
-              info: "Cloose a time later",
-              value: 0
-            };
-            console.log(currentTable);
-            tables.push(currentTable);
-          }
-        } else {
-          // the seached datetime is outside a reservation
-          if (next_reservation.start_dateTime - dt < 3600000) {
-            currentTable = {
-              info: "Table unavailable (less then one hour).",
-              value: 0
-            };
-            console.log(currentTable);
-            tables.push(currentTable);
-          } else if (
-            next_reservation.start_dateTime - dt > 3600000 &&
-            next_reservation.start_dateTime - dt < 7200000
-          ) {
-            var minutes_available = Math.floor(
-              (dt - next_reservation.start_dateTime) / 60000
-            );
-            var message2 =
-              "Table available for" +
-              minutes_available +
-              " minutes, between" +
-              overlapping_reservation.end_dateTime.getHours() +
-              " " +
-              overlapping_reservation.end_dateTime.getMinutes() +
-              " and" +
-              next_reservation.start_dateTime;
-
-            currentTable = {
-              info: message2,
-              value: minutes_available
-            };
-            tables.push(currentTable);
-          } else {
-            currentTable = {
-              info:
-                "Table available for the next 2 hours. Default behavior => table green",
-              value: 1
-            };
-            tables.push(currentTable);
-          }
-        }
+  ).then(function(reservations) {
+    reservations.forEach(function(reservation) {
+      //find out the next reservation at this table
+      if (
+        reservation.start_dateTime - dt >= 3600000 &&
+        reservation.start_dateTime - dt <= 7200000
+      ) {
+        var minutes_available = Math.floor(
+          (reservation.start_dateTime - dt) / 60000
+        );
+        var message = `Reservation available at table ${
+          reservation.table_id
+        } for ${minutes_available} minutes.`;
+        var table1 = {
+          info: message,
+          minutes_available: minutes_available,
+          table_id: reservation.table_id
+        };
+        tables.push(table1);
+      } else {
+        var message = "Table not available at this time";
+        var table2 = {
+          info: message,
+          minutes_available: 0,
+          table_id: reservation.table_id
+        };
+        tables.push(table2);
       }
     });
+    console.log(tables);
+    res.json(tables);
   });
-
-  res.json(tables);
 });
 
 /*GET ALL THE RESERVATIONS FOR A SPECIFIC DAY - FOR THE RESTAURANT*/
-router.get("/restaurant/reservations/:year/:month/:day", function(
-  req,
-  res,
-  next
-) {
-  var reservations = Reservation.find(
-    {
-      start_dateTime: {
-        $dateFromParts: {
-          year: req.params.year,
-          month: req.params.month,
-          day: req.params.day
-        }
-      }
-    },
-    function(err) {
-      console.log("An error has occured " + err);
-    }
-  );
-  res.json(req.body);
-});
+router.get("/restaurant/all_reservations", function(req, res, next) {
+  var body_date = new Date(req.body.dt);
 
-function available(a, b) {
-  //computes the minutes between 2 timestamps
-  return Math.floor(b - a / 60000);
-}
+  var start_of_day = new Date(
+    body_date.getFullYear(),
+    body_date.getMonth(),
+    body_date.getDate(),
+    13, //hour 12
+    0
+  );
+  var end_of_day = new Date(
+    body_date.getFullYear(),
+    body_date.getMonth(),
+    body_date.getDate(),
+    24, //hour 23
+    0
+  );
+  console.log("A");
+  Reservation.find(
+    {
+      $and: [
+        { start_dateTime: { $gte: start_of_day } },
+        { end_dateTime: { $lt: end_of_day } }
+      ]
+    },
+    function(err, reservations) {
+      if (err) console.log(err);
+
+      if (reservations) {
+        return reservations;
+      }
+    }
+  ).then(function(reservations) {
+    res.json(reservations);
+  });
+});
 
 module.exports = router;
