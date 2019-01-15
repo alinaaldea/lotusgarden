@@ -1,0 +1,70 @@
+#tableSpace {
+    background: white;
+    padding-top: 10px;
+    border-radius: 10px;
+}
+
+.reserveTable {
+    width: 100%;
+    margin: auto;
+    height: 100%;
+    max-width: 22%;
+}
+
+#rtb1 {
+    height: 50%;
+    width: 50%;
+    max-width: 75%;
+}
+
+#rtb2 {
+    height: 50%;
+    width: 50%;
+    max-width: 75%;
+
+}
+
+#rtb3 {
+    padding-right: 10%;
+}
+
+#rtb4 {
+    height: 50%;
+    width: 50%;
+    max-width: 75%;
+}
+
+#rtb5 {
+    height: 50%;
+    width: 50%;
+    max-width: 75%;
+}
+
+#rtb6 {
+    width: 18%;
+}
+
+#topLeft {
+    float: left;
+    height: 100%;
+    margin-left: 5%;
+}
+
+#topRight {
+    float: left;
+    height: 100%;
+    margin-left: 5%;
+}
+
+#topRow {
+    display: flex;
+    height: 30%;
+}
+
+#bottomRow {
+    display: flex;
+}
+
+#placeHODLER {
+    width: 25%;
+}
