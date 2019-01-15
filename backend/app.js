@@ -18,6 +18,7 @@ app.listen(port, () => {
 
 app.use(express.static(path.join(__dirname, "../frontend")));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/reservations", reservationRoutes);
 
 app.get("/", function(eq, res) {
