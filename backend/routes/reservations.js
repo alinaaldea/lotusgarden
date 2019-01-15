@@ -2,23 +2,37 @@ const express = require("express");
 const router = express.Router();
 var Reservation = require("../models/reservation.js");
 
-/*SAVE REGISTRATION*/
+/*SAVE RESERVATION*/
 router.post("/add", function(req, res, next) {
   var newReservation = req.body;
+  var date_start = new Date(newReservation.start_dateTime);
+  var date_end = new Date(
+    date_start.getFullYear(),
+    date_start.getMonth() + 1,
+    date_start.getDate(),
+    date_start.getHours() + 2,
+    date_start.getMinutes()
+  );
+
   new Reservation({
     name: newReservation.name,
     email: newReservation.email,
     phone_number: newReservation.phone_number,
-    start_dateTime: newReservation.start_dateTime,
-    end_dateTime: { $add: [newReservation.start_dateTime, 7200000] }, //7 200 000 ms = 2 hours
-    table_id: newReservation.table_id
+    start_dateTime: date_start,
+    end_dateTime: date_end,
+    table_id: newReservation.table_id,
+    token:
+      "_" +
+      Math.random()
+        .toString(36)
+        .substr(2, 9)
   }).save(function(err) {
     if (err) {
-      console.log("Couldn't save the reservation in the database" + err);
-      res.json(400, "Could not save your registration.");
+      console.log("Couldn't save the reservation in the database ");
+      res.status(400).json("Could not save your reservation. ");
     } else {
       console.log("SAVED!");
-      res.json(200, "Registration saved succesfully");
+      res.status(200).json("Reservation saved succesfully");
     }
   });
 });
@@ -136,3 +150,5 @@ function available(a, b) {
   //computes the minutes between 2 timestamps
   return Math.floor(b - a / 60000);
 }
+
+module.exports = router;
