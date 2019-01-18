@@ -81,7 +81,7 @@ router.post("/add", function(req, res, next) {
 });
 
 /*CANCEL RESERVATION*/
-router.get("/cancel", function(req, res, next){
+router.post("/cancel", function(req, res, next){
   var token = req.body.token;
   Reservation.deleteOne({token : token}, function(err) {
     if(err){
