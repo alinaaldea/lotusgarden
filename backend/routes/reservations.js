@@ -7,13 +7,7 @@ const nodemailer = require("nodemailer");
 router.post("/add", function(req, res, next) {
   var newReservation = req.body;
   var date_start = new Date(newReservation.start_dateTime);
-  var date_end = new Date(
-    date_start.getFullYear(),
-    date_start.getMonth(),
-    date_start.getDate(),
-    date_start.getHours() + 2,
-    date_start.getMinutes()
-  );
+  var date_end = new Date(newReservation.end_dateTime);
   var token =
     "_" +
     Math.random()
@@ -53,8 +47,11 @@ router.post("/add", function(req, res, next) {
         monthNames[date_start.getMonth()] +
         " " +
         date_start.getFullYear();
-      var hour = date_start.getHours() + ":";
-      hour += date_start.getMinutes() == 0 ? "00" : date_start.getMinutes();
+      var hourstart = (date_start.getHours()-1) + ":";
+      hourstart += date_start.getMinutes() == 0 ? "00" : date_start.getMinutes();
+      var hourend = (date_end.getHours()-1) + ":";
+      hourend += date_end.getMinutes() == 0 ? "00" : date_end.getMinutes();
+
       // create reusable transporter object using the default SMTP transport
       let transporter = nodemailer.createTransport({
         service: "Gmail",
@@ -69,7 +66,7 @@ router.post("/add", function(req, res, next) {
         from: '"LotusGarden 🌼" <webProgr.test.41@gmail.com>', // sender address
         to: newReservation.email, // list of receivers
         subject: "Confirmation of reservation", // Subject line
-        html: `<h2> Thank you for joining us! </h2> <br> <p>You have a reservation for ${day}, at hour ${hour}. <br> <p>We look forward to serving you!</p><br>If you want to cancel the reservation, please enter this code on our webpage: <b>${token}</b><br><br>Have a wonderful day, <br>Team LotusGarden` // html body
+        html: `<h2> Thank you for joining us! </h2> <br> <p>You have a reservation for ${day}, from ${hourstart} to ${hourend}. <br> <p>We look forward to serving you!</p><br>If you want to cancel the reservation, please enter this code on our webpage: <b>${token}</b><br><br>Have a wonderful day, <br>Team LotusGarden` // html body
       };
 
       // send mail with defined transport object
@@ -83,6 +80,18 @@ router.post("/add", function(req, res, next) {
   });
 });
 
+/*CANCEL RESERVATION*/
+router.get("/cancel", function(req, res, next){
+  var token = req.body.token;
+  Reservation.deleteOne({token : token}, function(err) {
+    if(err){
+      res.status(400).json("Reservation could not be deleted");
+    } else {
+      res.status(200).json("Reservation cancelled succesfully");
+    }
+  })
+})
+
 /*GET THE TABLES FOR A TIMESLOT*/
 router.get("/tables", function(req, res, next) {
   var body_date = new Date(req.body.dt);
@@ -93,6 +102,7 @@ router.get("/tables", function(req, res, next) {
     body_date.getHours(),
     body_date.getMinutes()
   );
+  console.log(body_date.getHours());
   var start_of_day = new Date(
     body_date.getFullYear(),
     body_date.getMonth(),
@@ -109,7 +119,6 @@ router.get("/tables", function(req, res, next) {
   );
 
   var tables = [];
-
   console.log(dt);
   console.log(start_of_day);
   console.log(end_of_day);
@@ -139,6 +148,9 @@ router.get("/tables", function(req, res, next) {
     }
   ).then(function(reservations) {
     reservations.forEach(function(reservation) {
+      console.log("start_dateTime: " + reservation.start_dateTime);
+      console.log("dt: " + dt);
+      console.log(reservation.start_dateTime - dt);
       //find out the next reservation at this table
       if (
         reservation.start_dateTime - dt > 3600000 &&
