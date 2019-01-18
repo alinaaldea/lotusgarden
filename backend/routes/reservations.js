@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 var Reservation = require("../models/reservation.js");
+const nodemailer = require("nodemailer");
 
 /*SAVE RESERVATION*/
 router.post("/add", function(req, res, next) {
@@ -13,7 +14,11 @@ router.post("/add", function(req, res, next) {
     date_start.getHours() + 2,
     date_start.getMinutes()
   );
-
+  var token =
+    "_" +
+    Math.random()
+      .toString(36)
+      .substr(2, 9);
   new Reservation({
     name: newReservation.name,
     email: newReservation.email,
@@ -21,17 +26,58 @@ router.post("/add", function(req, res, next) {
     start_dateTime: date_start,
     end_dateTime: date_end,
     table_id: newReservation.table_id,
-    token:
-      "_" +
-      Math.random()
-        .toString(36)
-        .substr(2, 9)
+    token: token
   }).save(function(err) {
     if (err) {
       console.log("Couldn't save the reservation in the database ");
       res.status(400).json("Could not save your reservation. ");
     } else {
       console.log("SAVED!");
+      monthNames = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ];
+      var day =
+        date_start.getDate() +
+        " " +
+        monthNames[date_start.getMonth()] +
+        " " +
+        date_start.getFullYear();
+      var hour = date_start.getHours() + ":";
+      hour += date_start.getMinutes() == 0 ? "00" : date_start.getMinutes();
+      // create reusable transporter object using the default SMTP transport
+      let transporter = nodemailer.createTransport({
+        service: "Gmail",
+        auth: {
+          user: "webProgr.test.41@gmail.com",
+          pass: "webProgr.test.41AA"
+        }
+      });
+
+      // setup email data with unicode symbols
+      let mailOptions = {
+        from: '"LotusGarden 🌼" <webProgr.test.41@gmail.com>', // sender address
+        to: newReservation.email, // list of receivers
+        subject: "Confirmation of reservation", // Subject line
+        html: `<h2> Thank you for joining us! </h2> <br> <p>You have a reservation for ${day}, at hour ${hour}. <br> <p>We look forward to serving you!</p><br>If you want to cancel the reservation, please enter this code on our webpage: <b>${token}</b><br><br>Have a wonderful day, <br>Team LotusGarden` // html body
+      };
+
+      // send mail with defined transport object
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) return console.log(error);
+        console.log("Message sent: %s", info.messageId);
+      });
+
       res.status(200).json("Reservation saved succesfully");
     }
   });
@@ -87,7 +133,7 @@ router.get("/tables", function(req, res, next) {
     function(err, reservations) {
       if (err) console.log(err);
       if (reservations) {
-        console.log(reservations);
+        // console.log(reservations);
         return reservations;
       }
     }
@@ -95,8 +141,8 @@ router.get("/tables", function(req, res, next) {
     reservations.forEach(function(reservation) {
       //find out the next reservation at this table
       if (
-        reservation.start_dateTime - dt >= 3600000 &&
-        reservation.start_dateTime - dt <= 7200000
+        reservation.start_dateTime - dt > 3600000 &&
+        reservation.start_dateTime - dt < 7200000
       ) {
         var minutes_available = Math.floor(
           (reservation.start_dateTime - dt) / 60000
@@ -109,7 +155,16 @@ router.get("/tables", function(req, res, next) {
           minutes_available: minutes_available,
           table_id: reservation.table_id
         };
+        console.log(message + "  " + reservation._id);
         tables.push(table1);
+      } else if (reservation.start_dateTime - dt >= 7200000) {
+        // var message = `Reservation available at table ${reservation.table_id}.`;
+        // var table1 = {
+        //   info: message,
+        //   minutes_available: minutes_available,
+        //   table_id: reservation.table_id
+        // };
+        // tables.push(table1);
       } else {
         var message = "Table not available at this time";
         var table2 = {
@@ -117,10 +172,11 @@ router.get("/tables", function(req, res, next) {
           minutes_available: 0,
           table_id: reservation.table_id
         };
+        console.log(reservation);
         tables.push(table2);
       }
     });
-    console.log(tables);
+    // console.log(tables);
     res.json(tables);
   });
 });
@@ -143,7 +199,7 @@ router.get("/restaurant/all_reservations", function(req, res, next) {
     24, //hour 23
     0
   );
-  console.log("A");
+
   Reservation.find(
     {
       $and: [
