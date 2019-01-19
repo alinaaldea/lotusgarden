@@ -31,7 +31,10 @@
 	<link href="css/reservation.css" rel="stylesheet">
 
 	<!-- Jquery-->
-	<script src="js/jquery-3.js" type="text/javascript"></script>
+      <script
+              src="https://code.jquery.com/jquery-3.3.1.min.js"
+              integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+              crossorigin="anonymous"></script>
 
   </head>
 
@@ -147,8 +150,8 @@
 
 						<div class="col-lg-6">
 								<b>Reservierungsdatum:</b><br>
-								<input class="p-2 mt-1" type="date" name="datetime" value="" id="datetimeField">
-								<input type="time">
+								<input class="p-2 mt-1" type="date" name="date" id="dateField">
+								<input type="time" id="timeField" min="12:00" max="24:00">
 						</div>
 					</div>
 					<div class="row">
@@ -509,10 +512,8 @@ kommt, gehören auch Nudeln wie Soba und Udon zu den klassischen Grundzutaten vo
       </section>
     </div>
 
-		<script src="js/scripts.js"></script>
 
     <!-- Bootstrap core JavaScript -->
-    <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
 
     <!-- Plugin JavaScript -->
@@ -525,6 +526,7 @@ kommt, gehören auch Nudeln wie Soba und Udon zu den klassischen Grundzutaten vo
 	<script src="js/ie10-viewport-bug-workaround.js"></script>
 	
 	<script src="js/popper.js"></script>
+	<script src="js/scripts.js"></script>
 	<script src="js/reservation.js"></script>
 	<script src="js/timePicker.js"></script>
 
