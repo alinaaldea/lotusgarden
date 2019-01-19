@@ -20,6 +20,7 @@ router.post("/add", function(req, res, next) {
     start_dateTime: date_start,
     end_dateTime: date_end,
     table_id: newReservation.table_id,
+    number_of_people: newReservation.number_of_people,
     token: token
   }).save(function(err) {
     if (err) {
@@ -47,9 +48,10 @@ router.post("/add", function(req, res, next) {
         monthNames[date_start.getMonth()] +
         " " +
         date_start.getFullYear();
-      var hourstart = (date_start.getHours()-1) + ":";
-      hourstart += date_start.getMinutes() == 0 ? "00" : date_start.getMinutes();
-      var hourend = (date_end.getHours()-1) + ":";
+      var hourstart = date_start.getHours() - 1 + ":";
+      hourstart +=
+        date_start.getMinutes() == 0 ? "00" : date_start.getMinutes();
+      var hourend = date_end.getHours() - 1 + ":";
       hourend += date_end.getMinutes() == 0 ? "00" : date_end.getMinutes();
 
       // create reusable transporter object using the default SMTP transport
@@ -81,16 +83,16 @@ router.post("/add", function(req, res, next) {
 });
 
 /*CANCEL RESERVATION*/
-router.post("/cancel", function(req, res, next){
+router.post("/cancel", function(req, res, next) {
   var token = req.body.token;
-  Reservation.deleteOne({token : token}, function(err) {
-    if(err){
+  Reservation.deleteOne({ token: token }, function(err) {
+    if (err) {
       res.status(400).json("Reservation could not be deleted");
     } else {
       res.status(200).json("Reservation cancelled succesfully");
     }
-  })
-})
+  });
+});
 
 /*GET THE TABLES FOR A TIMESLOT*/
 router.get("/tables", function(req, res, next) {

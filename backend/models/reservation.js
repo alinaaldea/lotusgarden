@@ -7,6 +7,7 @@ const reservationSchema = new mongoose.Schema({
   start_dateTime: Date,
   end_dateTime: Date,
   table_id: Number,
+  number_of_people: Number,
   token: String
 });
 
