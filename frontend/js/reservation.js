@@ -20,7 +20,6 @@ $(document).ready(function(){
     input.disabled = false;
     input.setAttribute('min', date);
 
-
     tblList.push({minutes_available: 10, table_id: 0});
     tblList.push({minutes_available: 60, table_id: 1});
     tblList.push({minutes_available: 120, table_id: 3});
@@ -74,7 +73,7 @@ function removeGreen (tableID) {
 
 function createTableList (tblList) {
 
-    disableAllTables();
+    enableAllTables();
 
     tbls = [];
     var seats = $("#numberSeats").html();
@@ -85,8 +84,8 @@ function createTableList (tblList) {
             elem: $("#rtb" + i),
             minutes_available: 0,
             free: true,
-            minSeats: false,
-            maxSeats: false
+            minSeats: seats >= tblMinSeats[id],
+            maxSeats: seats <= tblMaxSeats[id]
         }
 
         tbls.push(tbl);
@@ -94,7 +93,7 @@ function createTableList (tblList) {
 
     for(table of tblList) {
         var id = table.table_id - 1;
-        if(!tbls[id]) return false;
+        if(!tbls[id]) continue;
         tbls[id].minutes_available = table.minutes_available;
         tbls[id].free = table.minutes_available >= 60;
         tbls[id].minSeats = seats >= tblMinSeats[id];
@@ -106,23 +105,20 @@ function createTableList (tblList) {
 
 function mangageTableViewer () {
     for (table of tbls) {
-        if (!table.free) {
+        if (!table.free || !(table.maxSeats && table.minSeats)) {
+            table.elem.fadeTo(500, 0.3);
+            table.elem.unbind('mouseenter mouseleave click');
             table.elem.attr("title", "This table is not free");
-            continue;
-        }
-
-        if (table.maxSeats && table.minSeats) {
-            table.elem.fadeTo(500, 1);
-            table.elem.bind("mouseenter", mouseOverHandler);
-            table.elem.bind("mouseleave", mouseOffHandler);
-            table.elem.bind("click", clickHandler);
-        }
+            if (!table.minSeats) table.elem.attr("title", "Please reserve more seats for this table");
+        }        
     }
 }
 
-function disableAllTables() {
-    $(".reserveTable").fadeTo(800, 0.3);
-    $(".reserveTable").unbind('mouseenter mouseleave click');
+function enableAllTables() {
+    $(".reserveTable").fadeTo(800, 1);    
+    $(".reserveTable").bind("mouseenter", mouseOverHandler);
+    $(".reserveTable").bind("mouseleave", mouseOffHandler);
+    $(".reserveTable").bind("click", clickHandler);
     selected = null;
     for (var i = 1; i < 10; i++) {
         removeGreen("rtb" + i);
