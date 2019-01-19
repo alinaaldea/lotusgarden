@@ -4,7 +4,7 @@ var selected;
 
 $(document).ready(function(){
     //Prevent previous dates in datepicker
-    var input = document.getElementById("dateFiled");
+    var input = document.getElementById("dateField");
     var today = new Date();
     var day = today.getDate();
     // Set month to string to add leading 0
@@ -101,11 +101,3 @@ function createTablelist (dbList) {
 function disableAllTables() {
     $(".reserveTable").fadeTo(800, 0.3);
 }
-
-$(function () {
-
-    $('#datetimeField').datetimepicker({
-        minDate:new Date(),
-        disabledDates: [new Date()]
-    });
-});

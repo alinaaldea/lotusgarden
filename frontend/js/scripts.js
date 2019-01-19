@@ -16,5 +16,5 @@ var localDatetime = year + "-" +
     (minute < 10 ? "0" + minute.toString() : minute) +
     utcString.substring(16,19);
 
-var datetimeField = document.getElementById("dateFiled");
+var datetimeField = document.getElementById("dateField");
 datetimeField.value = localDatetime;
