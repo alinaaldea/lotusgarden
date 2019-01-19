@@ -20,7 +20,6 @@ $(document).ready(function(){
     input.disabled = false;
     input.setAttribute('min', date);
 
-    tblList.push({minutes_available: 10, table_id: 0});
     tblList.push({minutes_available: 60, table_id: 1});
     tblList.push({minutes_available: 120, table_id: 3});
     tblList.push({minutes_available: 60, table_id: 4});
@@ -84,32 +83,32 @@ function createTableList (tblList) {
             elem: $("#rtb" + i),
             minutes_available: 0,
             free: true,
-            minSeats: seats >= tblMinSeats[id],
-            maxSeats: seats <= tblMaxSeats[id]
+            minSeats: seats >= tblMinSeats[i-1],
+            maxSeats: seats <= tblMaxSeats[i-1]
         }
-
         tbls.push(tbl);
     }    
 
     for(table of tblList) {
+        
         var id = table.table_id - 1;
+
+        console.log(tblMinSeats[id], id);
         if(!tbls[id]) continue;
         tbls[id].minutes_available = table.minutes_available;
         tbls[id].free = table.minutes_available >= 60;
-        tbls[id].minSeats = seats >= tblMinSeats[id];
-        tbls[id].maxSeats = seats <= tblMaxSeats[id];
     }
-
     console.log(tbls);
 }
 
 function mangageTableViewer () {
     for (table of tbls) {
+        console.log(table);
         if (!table.free || !(table.maxSeats && table.minSeats)) {
             table.elem.fadeTo(500, 0.3);
             table.elem.unbind('mouseenter mouseleave click');
             table.elem.attr("title", "This table is not free");
-            if (!table.minSeats) table.elem.attr("title", "Please reserve more seats for this table");
+            if (table.free && !table.minSeats) table.elem.attr("title", "Please reserve more seats for this table");
         }        
     }
 }

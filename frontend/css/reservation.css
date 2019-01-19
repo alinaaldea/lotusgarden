@@ -83,6 +83,8 @@
     padding: 0 20px;
     display: inline-flex;
     overflow: hidden;
+    box-shadow: 0 1px 5px grey;
+    z-index: 2;
 
     background: rgb(226,226,226); /* Old browsers */
     background: -moz-linear-gradient(top, rgba(226,226,226,1) 0%, rgba(219,219,219,1) 50%, rgba(209,209,209,1) 51%, rgba(254,254,254,1) 100%); /* FF3.6-15 */
