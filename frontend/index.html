@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Sushi Bar & Vietnamesische Küche - Genießen Sie Sushi & klassische vietnamesische Küche in modernem Ambiente!">
     <meta name="author" content="Philipp Schiweck">
-	<link rel="icon" href="images/logo.jpg">
+		<link rel="icon" href="images/logo.jpg">
 
     <title>Lotus Garden</title>
 
@@ -19,7 +19,6 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
     <link href="css/font-awesome.min.css" rel="stylesheet">
     <link href="css/devicons.min.css" rel="stylesheet">
-    <link href="css/simple-line-icons.min.css" rel="stylesheet">
 
     <!-- Custom styles for this site -->
 		<link href="css/stylesheet.min.css" rel="stylesheet">
@@ -135,14 +134,32 @@
 					<h2 class="mb-5">Reservieren</h2>
 				<form>
 					<div class="row">
-						<div class="col-lg-4">
+						<div class="col-lg-6">
+							<b>Anzahl Personen</b><br>
+							<button class="btn btn-secondary dropdown-toggle" type="button" id="numberSeats" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								1
+							</button>
+							<div id="numberSeatsItems" class="dropdown-menu" aria-labelledby="numberSeats">
+								<!-- The options will go here -->
+								</div>
+						</div>
+
+
+						<div class="col-lg-6">
 								<b>Reservierungsdatum:</b><br>
 								<input class="p-2 mt-1" type="date" name="datetime" value="" id="datetimeField">
 								<input type="time">
 						</div>
 					</div>
 					<div class="row">
-							<div id="tableSpace">
+						<div class="col-lg-12" id="timePicker">
+								<div id="past"></div>
+								<div id="timePickerScrollable"></div>
+								<div id="future"></div>
+						</div>
+					</div>
+					<div class="row">
+							<div id="tableSpace" class="col-lg-12">									
 									<div id="topRow">
 										<div id="topLeft">
 											<img class="reserveTable" id="rtb1" src="images/reservation/two_table.png"><br>
@@ -198,7 +215,7 @@
           </div>
 
               <h3 class="mb-0">Speisekarte</h3>
-              <div class="subheading mb-3">Speisekarte durch clicken öffnen & vergrößern!<br>Weitere Bilder im Album</div>
+              <div class="subheading mb-3">Speisekarte durch klicken öffnen & vergrößern!<br>Weitere Bilder im Album</div>
               <div class="row gallery col-lg-12">
 				<div class="col-lg-4">
 					<a class="image-div " href="images/menu/menu1.jpg" data-lightbox="image1" data title="Speisekarte"><img src="images/menu/menu1.jpg" class="img-responsive"></a>
@@ -509,6 +526,7 @@ kommt, gehören auch Nudeln wie Soba und Udon zu den klassischen Grundzutaten vo
 	
 	<script src="js/popper.js"></script>
 	<script src="js/reservation.js"></script>
+	<script src="js/timePicker.js"></script>
 
   </body>
 
