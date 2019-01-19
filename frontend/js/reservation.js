@@ -3,6 +3,22 @@ var tblList = [];
 var selected;
 
 $(document).ready(function(){
+    //Prevent previous dates in datepicker
+    var input = document.getElementById("dateFiled");
+    var today = new Date();
+    var day = today.getDate();
+    // Set month to string to add leading 0
+    var mon = new String(today.getMonth()+1); //January is 0!
+    var yr = today.getFullYear();
+
+    if(mon.length < 2) { mon = "0" + mon; }
+
+    var date = new String( yr + '-' + mon + '-' + day );
+
+    input.disabled = false;
+    input.setAttribute('min', date);
+
+
     tblList.push({minutes_available: 10, table_id: 0});
     tblList.push({minutes_available: 60, table_id: 1});
     tblList.push({minutes_available: 120, table_id: 2});
@@ -85,3 +101,11 @@ function createTablelist (dbList) {
 function disableAllTables() {
     $(".reserveTable").fadeTo(800, 0.3);
 }
+
+$(function () {
+
+    $('#datetimeField').datetimepicker({
+        minDate:new Date(),
+        disabledDates: [new Date()]
+    });
+});
