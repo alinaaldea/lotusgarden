@@ -4,7 +4,7 @@ var x = 0;
 function createTimeSlot(h, m) {
     var slot = "";
     if (m == "00") slot += '<div class="vl"></div>';
-    slot += '<div class="timePickerItem" id=' + h + ':' + m + '>';
+    slot += '<div class="timePickerItem" id=' + h + m + '>';
     slot += '<span><b>' + h + '</b></span><br>';
     slot += '<span><small>:' + m + '</small></span>';
     return slot;
@@ -59,4 +59,6 @@ function pastClick (e) {
 
 function timeSlotClickHandler (e) {
     console.log(e.currentTarget.id);
+    $(".timePickerItem").css('background', '');
+    $("#" + e.currentTarget.id).css('background', '#f85131');
 }
