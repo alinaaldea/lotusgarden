@@ -155,7 +155,7 @@ router.get("/tables", function(req, res, next) {
       console.log(reservation.start_dateTime - dt);
       //find out the next reservation at this table
       if (
-        reservation.start_dateTime - dt > 3600000 &&
+        reservation.start_dateTime - dt >= 3600000 &&
         reservation.start_dateTime - dt < 7200000
       ) {
         var minutes_available = Math.floor(
