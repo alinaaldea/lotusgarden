@@ -95,7 +95,7 @@ router.post("/cancel", function(req, res, next) {
 });
 
 /*GET THE TABLES FOR A TIMESLOT*/
-router.get("/tables", function(req, res, next) {
+router.post("/tables", function(req, res, next) {
   var body_date = new Date(req.body.dt);
   var dt = new Date(
     body_date.getFullYear(),
@@ -144,7 +144,6 @@ router.get("/tables", function(req, res, next) {
     function(err, reservations) {
       if (err) console.log(err);
       if (reservations) {
-        // console.log(reservations);
         return reservations;
       }
     }
@@ -196,7 +195,7 @@ router.get("/tables", function(req, res, next) {
 });
 
 /*GET ALL THE RESERVATIONS FOR A SPECIFIC DAY - FOR THE RESTAURANT*/
-router.get("/restaurant/all_reservations", function(req, res, next) {
+router.post("/restaurant/all_reservations", function(req, res, next) {
   var body_date = new Date(req.body.dt);
 
   var start_of_day = new Date(
