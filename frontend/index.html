@@ -32,7 +32,7 @@
 	<link href="css/reservation.css" rel="stylesheet">
 
 	<!-- Jquery-->
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+	<script src="js/jquery-3.js" type="text/javascript"></script>
 
   </head>
 
@@ -163,12 +163,10 @@
 									</div>							
 								</div>
 					</div>
-						<button class="col-lg-12 mt-3 p-2 btn btn-success " type="button">Reservieren</button>
-
 						<div id="personalDataInputContainer">
 							<div class="col-lg-4">						
 								<b>Name:</b><br>
-								<input class="mt-1 col-lg-12" type="text" name="name" placeholder="Vor/Nachname"><br>
+								<input id="nameInput" class="mt-1 col-lg-12" type="text" name="name" placeholder="Vor/Nachname"><br>
 							</div>
 							<div class="col-lg-4">
 									<b>E-Mail:</b><br>
@@ -179,6 +177,7 @@
 									<input class="mt-1 col-lg-12" type="text" name="phone" placeholder="Mobile"><br>
 							</div>
 						</div>
+						<button id="reserveButton" class="col-lg-12 mt-3 p-2 btn" type="button">Reservieren</button>
 					</div>
 				</form>
 			</section>
@@ -505,15 +504,11 @@ kommt, gehören auch Nudeln wie Soba und Udon zu den klassischen Grundzutaten vo
     <!-- Custom scripts for this template -->
     <script src="js/resume.min.js"></script>
 	
-	<!-- Placed at the end of the document so the pages load faster -->
-    <script src="js/jquery-3.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 	
 	<script src="js/ie10-viewport-bug-workaround.js"></script>
 	
 	<script src="js/popper.js"></script>
-	<script src="js/lightbox-plus-jquery.min.js"></script>
-	<script src="js/lightbox.js"></script>
-	<script src="css/reserve.js"></script>
+	<script src="js/reservation.js"></script>
 
   </body>
 

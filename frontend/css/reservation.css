@@ -68,3 +68,7 @@
 #placeHODLER {
     width: 25%;
 }
+
+#personalDataInputContainer {
+    display: none;
+}
