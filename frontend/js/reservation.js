@@ -94,6 +94,7 @@ function createTableList (tblList) {
 
     for(table of tblList) {
         var id = table.table_id - 1;
+        if(!tbls[id]) return false;
         tbls[id].minutes_available = table.minutes_available;
         tbls[id].free = table.minutes_available >= 60;
         tbls[id].minSeats = seats >= tblMinSeats[id];

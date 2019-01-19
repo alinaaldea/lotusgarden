@@ -19,7 +19,7 @@ $(document).ready(function(){
 
     tp.mousemove(mouseMoveHandler);
 
-    for (var i = 12; i < 23; i++) {
+    for (var i = 12; i < 24; i++) {
         for (var j = 00; j < 60; j += 15) {
             tp.append(createTimeSlot(h(i), h(j)));
         }        
@@ -58,5 +58,5 @@ function pastClick (e) {
 }
 
 function timeSlotClickHandler (e) {
-    console.log(e.target);
+    console.log(e.currentTarget.id);
 }
