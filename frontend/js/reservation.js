@@ -68,7 +68,6 @@ function createTableList (tblList) {
             maxSeats: seats <= tblMaxSeats[i-1]
         }
         tbls.push(tbl);
-        calcEndTime(i-1);
     }    
 
     for(table of tblList) {
@@ -170,7 +169,7 @@ function reserveButtonHandler () {
 
 function calcEndTime (tableID) {
     var time = timePicked;
-    var available = tbls[tableID].minutes_available;
+    var available = tbls[tableID-1].minutes_available;
     var endTime = time.split(":");
 
     endTime[0] = parseInt(endTime[0]) + Math.floor(available / 60);
