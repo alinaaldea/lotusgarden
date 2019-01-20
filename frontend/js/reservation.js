@@ -5,6 +5,7 @@ var numTables = 9;
 
 $(document).ready(function(){
     createDropDownMenu();
+    $("#reserveButton").on("click", reserveButtonHandler);
 });
 
 // Adds the items to the Dropdown menu
@@ -22,7 +23,7 @@ function changeNumberSeats (seats) {
     selected = null;
 
     if (timePicked) {
-        createTableList(tblList);
+        getReservedFromDb();
     }
 }
 
@@ -59,12 +60,13 @@ function createTableList (tblList) {
         var tbl = {
             id: i,
             elem: $("#rtb" + i),
-            minutes_available: 0,
+            minutes_available: 120,
             free: true,
             minSeats: seats >= tblMinSeats[i-1],
             maxSeats: seats <= tblMaxSeats[i-1]
         }
         tbls.push(tbl);
+        calcEndTime(i-1);
     }    
 
     for(table of tblList) {
@@ -73,10 +75,10 @@ function createTableList (tblList) {
         if(!tbls[id]) continue;
         tbls[id].minutes_available = table.minutes_available;
         tbls[id].free = table.minutes_available >= 60;
+        
     }
 
     mangageTableViewer();
-
 }
 
 function getReservedFromDb () {
@@ -84,7 +86,7 @@ function getReservedFromDb () {
     console.log("Fetch reservations for "+ dateTime);
 
     $.post("/reservations/tables/", {
-        dt: "10.01.2018 17:00:00.000Z"
+        dt: "2018-01-10 17:00:00.000Z"
     },
     function (data) {
         console.log(data);
@@ -101,7 +103,11 @@ function mangageTableViewer () {
             table.elem.attr("title", "This table is not available");
             if (table.free && !table.minSeats) table.elem.attr("title", "Please reserve more seats for this table");
             if (table.free && !table.maxSeats) table.elem.attr("title", "This table has not enough seats");
-        }        
+        } else {
+            if (table.minutes_available < 120) {
+                table.elem.attr("title", "This is only available for " + table.minutes_available + " Minutes!");
+            }
+        }
     }
 }
 
@@ -134,4 +140,34 @@ function clickHandler(e) {
 
 function refreshTableView () {
     getReservedFromDb();
+}
+
+function reserveButtonHandler () {
+    var reservation = {
+        name: $("#nameInput").val(),
+        email: $("#mailInput").val(),
+        phone_number: $("#phoneInput").val(),
+        start_dateTime: selectedDate + " " + timePicked + "Z",
+        end_dateTime: calcEndTime(selected.replace("rtb", "")),
+        table_id: selected.replace("rtb", ""),
+        number_of_people: $("#numberSeats").html()
+    }
+    $.post("/reservations/add/", JSON.stringify(reservation), function (data, err) {
+        console.log(err, data);
+    });
+}
+
+function calcEndTime (tableID) {
+    var time = timePicked;
+    var available = tbls[tableID].minutes_available;
+    var endTime = time.split(":");
+
+    endTime[0] = parseInt(endTime[0]) + Math.floor(available / 60);
+    endTime[1] = (parseInt(endTime[1]) + available) % 60
+
+    if (endTime[1].toString().length == 1) endTime[1] = "0" + endTime[1];
+
+    var endDateTime = selectedDate + " " + endTime[0] + ":" + endTime[1] + "Z";
+
+    return (endDateTime);
 }

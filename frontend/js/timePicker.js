@@ -45,7 +45,6 @@ function futureClick (e) {
         left: "-=160"
     }, 300, function() {
         if (parseInt(tp.css('left'), 10) > 20) tp.css('left', '20px');
-        console.log(tp.css('left'))
     });
 }
 
@@ -54,7 +53,6 @@ function pastClick (e) {
         left: "+=160"
     }, 300, function() {
         if (parseInt(tp.css('left'), 10) > 20) tp.css('left', '20px');
-        console.log(tp.css('left'))
     });
 }
 
