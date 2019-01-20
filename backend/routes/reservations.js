@@ -14,7 +14,6 @@ router.post("/add", function(req, res, next) {
       .toString(36)
       .substr(2, 9);
   console.log(newReservation);
-  console.log(newReservation.body.email);
   new Reservation({
     name: newReservation.name,
     email: newReservation.email,
