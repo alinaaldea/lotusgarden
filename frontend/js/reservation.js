@@ -57,10 +57,8 @@ function colorYellow (tableID) {
 
 function removeGreen (tableID) {
     var src = $("#" + tableID).attr("src");
-    console.log(src);
     src = src.replace("_green", "");
     src = src.replace("_yellow", "");
-    console.log(src);
     $("#" + tableID).attr("src", src);
 }
 
