@@ -26,9 +26,9 @@ function tableBuilder(reservationArray){
         var j;
         for(j = 0; j < reservationArray[key].length; j++){
             var startTime = new Date(reservationArray[key][j].start_dateTime);
-            startTime = startTime.getHours() + ":" + (startTime.getMinutes()<10?'0':'') + startTime.getMinutes();
+            startTime = startTime.getHours() - 1 + ":" + (startTime.getMinutes()<10?'0':'') + startTime.getMinutes();
             var endTime = new Date(reservationArray[key][j].end_dateTime);
-            endTime = endTime.getHours() + ":" + (endTime.getMinutes()<10?'0':'') + endTime.getMinutes();
+            endTime = endTime.getHours() - 1 + ":" + (endTime.getMinutes()<10?'0':'') + endTime.getMinutes();
 
 
             table += "<tr>";
