@@ -115,6 +115,7 @@ function mangageTableViewer () {
 }
 
 function enableAllTables () {
+    $(".reserveTable").unbind("click");
     $(".reserveTable").fadeTo(800, 1);    
     $(".reserveTable").bind("mouseenter", mouseOverHandler);
     $(".reserveTable").bind("mouseleave", mouseOffHandler);
