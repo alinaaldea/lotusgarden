@@ -21,16 +21,22 @@ function getReservationsByDate(){
 function tableBuilder(reservationArray){
     var i;
     table = "<div class='row'>";
-    for(i = 1; i < reservationArray.length; i++){
-        var table = table + "<div class='col-lg-6'><h3>Table " + Object.keys(reservationArray)[i - 1] +"</h3>\n<table class='table table-hover table-bordered reservationTable'><tr><th>Table</th><th>Name</th><th>Start Time</th><th>End Time</th><th>Phone</th></tr>";
+    for(var key in reservationArray){
+        var table = table + "<div class='col-lg-6'><h3>Table " + key +"</h3>\n<table class='table table-hover table-bordered reservationTable'><tr><th>Table</th><th>Name</th><th>Start Time</th><th>End Time</th><th>Phone</th></tr>";
         var j;
-        for(j = 0; j < reservationArray[i].length; j++){
+        for(j = 0; j < reservationArray[key].length; j++){
+            var startTime = new Date(reservationArray[key][j].start_dateTime);
+            startTime = startTime.getHours() + ":" + (startTime.getMinutes()<10?'0':'') + startTime.getMinutes();
+            var endTime = new Date(reservationArray[key][j].end_dateTime);
+            endTime = endTime.getHours() + ":" + (endTime.getMinutes()<10?'0':'') + endTime.getMinutes();
+
+
             table += "<tr>";
-            table = table + "<td>" + reservationArray[i][j].table_id + "</td>";
-            table = table + "<td>" + reservationArray[i][j].name + "</td>";
-            table = table + "<td>" + reservationArray[i][j].start_dateTime.split('T')[1] + "</td>";
-            table = table + "<td>" + reservationArray[i][j].end_dateTime.split('T')[1] + "</td>";
-            table = table + "<td>" + reservationArray[i][j].phone_number + "</td>";
+            table = table + "<td>" + reservationArray[key][j].table_id + "</td>";
+            table = table + "<td>" + reservationArray[key][j].name + "</td>";
+            table = table + "<td>" + startTime + "</td>";
+            table = table + "<td>" + endTime + "</td>";
+            table = table + "<td>" + reservationArray[key][j].phone_number + "</td>";
             table += "</tr>";
         }
         table += "</table></div>";
