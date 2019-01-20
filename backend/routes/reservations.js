@@ -69,7 +69,7 @@ router.post("/add", function(req, res, next) {
         from: '"LotusGarden 🌼" <webProgr.test.41@gmail.com>', // sender address
         to: newReservation.email, // list of receivers
         subject: "Confirmation of reservation", // Subject line
-        html: `<h2> Thank you for joining us! </h2> <br> <p>You have a reservation for ${day}, from ${hourstart} to ${hourend}. <br> <p>We look forward to serving you!</p><br>If you want to cancel the reservation, please enter this code on our webpage: <b>${token}</b><br><br>Have a wonderful day, <br>Team LotusGarden` // html body
+        html: `<h2> Thank you for joining us! </h2> <br> <p>You have a reservation for ${day}, from ${hourstart} to ${hourend}. <br> <p>We look forward to serving you!</p><br>If you want to cancel the reservation, please click the following link: <b><a href="http://localhost:3000/reservations/cancel/${token}">cancel reservation</a></b><br><br>Have a wonderful day, <br>Team LotusGarden` // html body
       };
 
       // send mail with defined transport object
@@ -84,13 +84,14 @@ router.post("/add", function(req, res, next) {
 });
 
 /*CANCEL RESERVATION*/
-router.post("/cancel", function(req, res, next) {
-  var token = req.body.token;
+router.get("/cancel/:token", function(req, res, next) {
+  var token = req.params.token;
+  console.log(token);
   Reservation.deleteOne({ token: token }, function(err) {
     if (err) {
-      res.status(400).json("Reservation could not be deleted");
+      res.status(400).send("Reservation could not be deleted");
     } else {
-      res.status(200).json("Reservation cancelled succesfully");
+      res.status(200).send("Reservation cancelled succesfully");
     }
   });
 });
