@@ -42,3 +42,7 @@ app.use("/reservations", reservationRoutes);
 app.get("/", function(eq, res) {
   res.sendFile(path.join(__dirname, "../frontend/index.html"));
 });
+
+app.get("/getReservations", function(eq, res) {
+    res.sendFile(path.join(__dirname, "../frontend/getReservations.html"));
+});

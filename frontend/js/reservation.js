@@ -153,7 +153,7 @@ function reserveButtonHandler () {
         table_id: selected.replace("rtb", ""),
         number_of_people: seats
     }
-    $.post("/reservations/add/", JSON.stringify(reservation), function (data, err) {
+    $.post("/reservations/add/", reservation, function (data, err) {
         console.log(err, data);
     });
 }
