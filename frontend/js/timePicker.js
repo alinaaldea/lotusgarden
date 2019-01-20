@@ -1,5 +1,6 @@
 var tp = $("#timePickerScrollable");
 var x = 0;
+var timePicked = null;
 
 function createTimeSlot(h, m) {
     var slot = "";
@@ -58,7 +59,10 @@ function pastClick (e) {
 }
 
 function timeSlotClickHandler (e) {
-    console.log(e.currentTarget.id);
     $(".timePickerItem").css('background', '');
     $("#" + e.currentTarget.id).css('background', '#f85131');
+    
+    timePicked = e.currentTarget.id;
+    timePicked = timePicked.slice(0,2) + ":" + timePicked.slice(2);
+    refreshTableView();
 }

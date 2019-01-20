@@ -1,42 +1,17 @@
 var tbls = [];
 var tblMinSeats = [1,1,2,1,1,3,4,4,3];
 var tblMaxSeats = [2,2,4,2,2,6,8,8,6];
-var tblList = [];
 var numTables = 9;
 
 $(document).ready(function(){
-    //Prevent previous dates in datepicker
-    var input = document.getElementById("dateField");
-    var today = new Date();
-    var day = today.getDate();
-    // Set month to string to add leading 0
-    var mon = new String(today.getMonth()+1); //January is 0!
-    var yr = today.getFullYear();
-
-    if(mon.length < 2) { mon = "0" + mon; }
-
-    var date = new String( yr + '-' + mon + '-' + day );
-
-    input.disabled = false;
-    input.setAttribute('min', date);
-
-    tblList.push({minutes_available: 60, table_id: 1});
-    tblList.push({minutes_available: 120, table_id: 3});
-    tblList.push({minutes_available: 60, table_id: 4});
-    tblList.push({minutes_available: 0, table_id: 7});
-    tblList.push({minutes_available: 60, table_id: 8});
-    tblList.push({minutes_available: 120, table_id: 9});
-
     createDropDownMenu();
-    createTableList(tblList);
-    mangageTableViewer();
 });
 
 // Adds the items to the Dropdown menu
 function createDropDownMenu() {
     var dropdown = $("#numberSeatsItems");
 
-    for (var i = 1; i < 10; i++) {
+    for (var i = 1; i < 9; i++) {
         dropdown.append('<a class="dropdown-item" onclick="changeNumberSeats(' + i + ')">' + i + '</a>');
     }
 }
@@ -44,8 +19,11 @@ function createDropDownMenu() {
 // The function that is called when the user selects a value from the dropdown
 function changeNumberSeats (seats) {
     $("#numberSeats").html(seats);
-    createTableList(tblList);
-    mangageTableViewer();
+    selected = null;
+
+    if (timePicked) {
+        createTableList(tblList);
+    }
 }
 
 function mouseOverHandler(e) {
@@ -92,23 +70,37 @@ function createTableList (tblList) {
     for(table of tblList) {
         
         var id = table.table_id - 1;
-
-        console.log(tblMinSeats[id], id);
         if(!tbls[id]) continue;
         tbls[id].minutes_available = table.minutes_available;
         tbls[id].free = table.minutes_available >= 60;
     }
-    console.log(tbls);
+
+    mangageTableViewer();
+
 }
 
+function getReservedFromDb () {
+    var dateTime = selectedDate + " " + timePicked + "Z";
+    console.log("Fetch reservations for "+ dateTime);
+
+    $.post("/reservations/tables/", {
+        dt: "10.01.2018 17:00:00.000Z"
+    },
+    function (data) {
+        console.log(data);
+        createTableList(data);
+    });
+}
+
+// Gray out all the tables that are not to be reserved
 function mangageTableViewer () {
     for (table of tbls) {
-        console.log(table);
         if (!table.free || !(table.maxSeats && table.minSeats)) {
             table.elem.fadeTo(500, 0.3);
             table.elem.unbind('mouseenter mouseleave click');
-            table.elem.attr("title", "This table is not free");
+            table.elem.attr("title", "This table is not available");
             if (table.free && !table.minSeats) table.elem.attr("title", "Please reserve more seats for this table");
+            if (table.free && !table.maxSeats) table.elem.attr("title", "This table has not enough seats");
         }        
     }
 }
@@ -119,6 +111,8 @@ function enableAllTables() {
     $(".reserveTable").bind("mouseleave", mouseOffHandler);
     $(".reserveTable").bind("click", clickHandler);
     selected = null;
+    $("#reserveButton").removeClass("btn-success");
+    $("#personalDataInputContainer").slideUp("fast");
     for (var i = 1; i < 10; i++) {
         removeGreen("rtb" + i);
     }
@@ -133,10 +127,11 @@ function clickHandler(e) {
     colorGreen(selected);
     $("#personalDataInputContainer").slideDown("slow", function () {
         $("#reserveButton").addClass("btn-success");
-        $([document.documentElement, document.body]).animate({
-            scrollTop: $("#nameInput").offset().top - 100
-        }, 1000);
         $("#nameInput").focus();
     });
     console.log("Click on: " + selected);
+}
+
+function refreshTableView () {
+    getReservedFromDb();
 }
