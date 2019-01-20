@@ -20,8 +20,9 @@ $(document).ready(function(){
 
     tp.mousemove(mouseMoveHandler);
 
+
     for (var i = 12; i < 24; i++) {
-        for (var j = 00; j < 60; j += 15) {
+        for (var j = 0; j < 60; j += 15) {
             tp.append(createTimeSlot(h(i), h(j)));
         }        
     }
