@@ -10,17 +10,21 @@ function setDateToToday () {
     var yr = today.getFullYear();
     if(mon.length < 2) { mon = "0" + mon; }
     var date = new String( yr + '-' + mon + '-' + day );
-    selectedDate = date;
     input.value = date;
     input.disabled = false;
     input.setAttribute('min', date);
 }
 
 function setDate () {
-    console.log($("#dateField").value);
+    console.log($("#dateField").val());
+    selectedDate = $("#dateField").val();
+    if (timePicked) {
+        refreshTableView();
+    }
 }
 
 $(document).ready(function(){
     //$("#dateField").datepicker();
     setDateToToday();
+    $("#dateField").change(setDate);
 });
