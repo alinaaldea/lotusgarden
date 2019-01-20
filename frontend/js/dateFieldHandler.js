@@ -10,6 +10,7 @@ function setDateToToday () {
     var yr = today.getFullYear();
     if(mon.length < 2) { mon = "0" + mon; }
     var date = new String( yr + '-' + mon + '-' + day );
+    selectedDate = date;
     input.value = date;
     input.disabled = false;
     input.setAttribute('min', date);

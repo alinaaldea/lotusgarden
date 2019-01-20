@@ -32,7 +32,8 @@ function changeNumberSeats (numseats) {
 
 function mouseOverHandler(e) {
     var id = e.currentTarget.id;
-    colorGreen(id);
+    if ( (tbls[id.replace("rtb","")-1].minutes_available) < 120) colorYellow(id);
+    else colorGreen(id);
 }
 
 function mouseOffHandler(e) {
@@ -42,13 +43,24 @@ function mouseOffHandler(e) {
 
 function colorGreen (tableID) {
     var src = $("#" + tableID).attr("src");
-    if (src.indexOf("_green") == -1) {
+    if (src.indexOf("_green") == -1 && src.indexOf("_yellow") == -1 ) {
         $("#" + tableID).attr("src", src.replace(".png", "_green.png"));
     }    
 }
 
+function colorYellow (tableID) {
+    var src = $("#" + tableID).attr("src");
+    if (src.indexOf("_green") == -1 && src.indexOf("_yellow") == -1 ) {
+        $("#" + tableID).attr("src", src.replace(".png", "_yellow.png"));
+    }    
+}
+
 function removeGreen (tableID) {
-    var src = $("#" + tableID).attr("src").replace("_green", "");
+    var src = $("#" + tableID).attr("src");
+    console.log(src);
+    src = src.replace("_green", "");
+    src = src.replace("_yellow", "");
+    console.log(src);
     $("#" + tableID).attr("src", src);
 }
 
