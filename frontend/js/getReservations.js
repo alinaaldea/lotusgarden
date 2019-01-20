@@ -12,6 +12,7 @@ function getReservationsByDate(){
             sortedReservations[reservation.table_id] = sortedReservations[reservation.table_id] || [];
             sortedReservations[reservation.table_id].push(reservation);
         });
+        console.log(sortedReservations);
         tableDiv.innerHTML = tableBuilder(sortedReservations);
         sortTable();
     })
@@ -19,10 +20,9 @@ function getReservationsByDate(){
 }
 
 function tableBuilder(reservationArray){
-    var i;
-    table = "<div class='row'>";
+    var table = "<div class='row'>";
     for(var key in reservationArray){
-        var table = table + "<div class='col-lg-6'><h3>Table " + key +"</h3>\n<table class='table table-hover table-bordered reservationTable'><tr><th>Table</th><th>Name</th><th>Start Time</th><th>End Time</th><th>Phone</th></tr>";
+        var table = table + "<div class='col-lg-6'><h3>Table " + key +"</h3>\n<table class='table table-hover table-bordered reservationTable'><tr><th>Name</th><th>Number of people</th><th>Start Time</th><th>End Time</th><th>Phone</th></tr>";
         var j;
         for(j = 0; j < reservationArray[key].length; j++){
             var startTime = new Date(reservationArray[key][j].start_dateTime);
@@ -32,8 +32,8 @@ function tableBuilder(reservationArray){
 
 
             table += "<tr>";
-            table = table + "<td>" + reservationArray[key][j].table_id + "</td>";
             table = table + "<td>" + reservationArray[key][j].name + "</td>";
+            table = table + "<td>" + reservationArray[key][j].number_of_people + "</td>";
             table = table + "<td>" + startTime + "</td>";
             table = table + "<td>" + endTime + "</td>";
             table = table + "<td>" + reservationArray[key][j].phone_number + "</td>";
