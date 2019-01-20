@@ -196,16 +196,18 @@ router.post("/tables", function(req, res, next) {
 
 /*GET ALL THE RESERVATIONS FOR A SPECIFIC DAY - FOR THE RESTAURANT*/
 router.post("/restaurant/all_reservations", function(req, res, next) {
-  var body_date = new Date(req.body.dt);
+  
+    let body_date = new Date(req.body.dt);
 
-  var start_of_day = new Date(
+
+    let start_of_day = new Date(
     body_date.getFullYear(),
     body_date.getMonth(),
     body_date.getDate(),
     13, //hour 12
     0
   );
-  var end_of_day = new Date(
+  let end_of_day = new Date(
     body_date.getFullYear(),
     body_date.getMonth(),
     body_date.getDate(),
@@ -229,6 +231,8 @@ router.post("/restaurant/all_reservations", function(req, res, next) {
     }
   ).then(function(reservations) {
     res.json(reservations);
+  }).catch(function(error){
+    res.send(error);
   });
 });
 
