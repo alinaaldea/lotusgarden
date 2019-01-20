@@ -2,6 +2,7 @@ var tbls = [];
 var tblMinSeats = [1,1,2,1,1,3,4,4,3];
 var tblMaxSeats = [2,2,4,2,2,6,8,8,6];
 var numTables = 9;
+var seats = 1;
 
 $(document).ready(function(){
     createDropDownMenu();
@@ -18,8 +19,9 @@ function createDropDownMenu() {
 }
 
 // The function that is called when the user selects a value from the dropdown
-function changeNumberSeats (seats) {
-    $("#numberSeats").html(seats);
+function changeNumberSeats (numseats) {
+    $("#numberSeats").html(numseats);
+    seats = numseats;
     selected = null;
 
     if (timePicked) {
@@ -54,7 +56,6 @@ function createTableList (tblList) {
     enableAllTables();
 
     tbls = [];
-    var seats = $("#numberSeats").html();
 
     for (var i = 1; i <= numTables; i++) {
         var tbl = {
@@ -150,7 +151,7 @@ function reserveButtonHandler () {
         start_dateTime: selectedDate + " " + timePicked + "Z",
         end_dateTime: calcEndTime(selected.replace("rtb", "")),
         table_id: selected.replace("rtb", ""),
-        number_of_people: $("#numberSeats").html()
+        number_of_people: seats
     }
     $.post("/reservations/add/", JSON.stringify(reservation), function (data, err) {
         console.log(err, data);
