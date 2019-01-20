@@ -7,6 +7,7 @@ var seats = 1;
 $(document).ready(function(){
     createDropDownMenu();
     $("#reserveButton").on("click", reserveButtonHandler);
+    disableAllTables();
 });
 
 // Adds the items to the Dropdown menu
@@ -98,6 +99,7 @@ function getReservedFromDb () {
 // Gray out all the tables that are not to be reserved
 function mangageTableViewer () {
     for (table of tbls) {
+        table.elem.attr("title", "");
         if (!table.free || !(table.maxSeats && table.minSeats)) {
             table.elem.fadeTo(500, 0.3);
             table.elem.unbind('mouseenter mouseleave click');
@@ -112,7 +114,7 @@ function mangageTableViewer () {
     }
 }
 
-function enableAllTables() {
+function enableAllTables () {
     $(".reserveTable").fadeTo(800, 1);    
     $(".reserveTable").bind("mouseenter", mouseOverHandler);
     $(".reserveTable").bind("mouseleave", mouseOffHandler);
@@ -123,6 +125,13 @@ function enableAllTables() {
     for (var i = 1; i < 10; i++) {
         removeGreen("rtb" + i);
     }
+}
+
+function disableAllTables () {
+    $(".reserveTable").fadeTo(100, 0.2);
+    $(".reserveTable").bind("click", function() {
+        alert("Please select a time first!");
+    });
 }
 
 function clickHandler(e) {
