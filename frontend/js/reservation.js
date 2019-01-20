@@ -153,6 +153,8 @@ function refreshTableView () {
 }
 
 function reserveButtonHandler () {
+    if (!$("#reserveButton").hasClass('btn-success')) return false;
+
     var reservation = {
         name: $("#nameInput").val(),
         email: $("#mailInput").val(),
@@ -164,6 +166,12 @@ function reserveButtonHandler () {
     }
     $.post("/reservations/add/", reservation, function (data, err) {
         console.log(err, data);
+        if (data) {
+            alert("Reservation was SUCCESSFULL!");
+            $("#reserveButton").removeClass("btn-success");
+            $("#personalDataInputContainer").slideUp("fast");
+            disableAllTables();
+        }
     });
 }
 
