@@ -13,6 +13,8 @@ router.post("/add", function(req, res, next) {
     Math.random()
       .toString(36)
       .substr(2, 9);
+  console.log(newReservation);
+  console.log(newReservation.body.email);
   new Reservation({
     name: newReservation.name,
     email: newReservation.email,
@@ -25,7 +27,7 @@ router.post("/add", function(req, res, next) {
   }).save(function(err) {
     if (err) {
       console.log("Couldn't save the reservation in the database ");
-      res.status(400).json("Could not save your reservation. ");
+      res.status(400).json("Could not save your reservation.");
     } else {
       console.log("SAVED!");
       monthNames = [
