@@ -86,7 +86,7 @@ function getReservedFromDb () {
     console.log("Fetch reservations for "+ dateTime);
 
     $.post("/reservations/tables/", {
-        dt: "2018-01-10 17:00:00.000Z"
+        dt: dateTime
     },
     function (data) {
         console.log(data);
