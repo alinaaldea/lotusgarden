@@ -172,14 +172,6 @@ router.post("/tables", function(req, res, next) {
         };
         console.log(message + "  " + reservation._id);
         tables.push(table1);
-      } else if (reservation.start_dateTime - dt >= 7200000) {
-        // var message = `Reservation available at table ${reservation.table_id}.`;
-        // var table1 = {
-        //   info: message,
-        //   minutes_available: minutes_available,
-        //   table_id: reservation.table_id
-        // };
-        // tables.push(table1);
       } else {
         var message = "Table not available at this time";
         var table2 = {
@@ -191,7 +183,6 @@ router.post("/tables", function(req, res, next) {
         tables.push(table2);
       }
     });
-    // console.log(tables);
     res.json(tables);
   });
 });
